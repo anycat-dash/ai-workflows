@@ -1,0 +1,51 @@
+name: pr-review
+slug: pr-review
+version: 0.6.0
+description: Structured PR review workflows with parallel specialized subagents, security auditing, and stale PR triage.
+category: pr-review
+tags:
+  - code-review
+  - security
+  - pr
+  - multi-agent
+
+compatibility:
+  claude-code:
+    type: subagent
+    supported: true
+    agents:
+      - agents/reviewer.md
+      - agents/correctness-reviewer.md
+      - agents/security-reviewer.md
+      - agents/quality-reviewer.md
+      - agents/testing-reviewer.md
+      - agents/finding-verifier.md
+      - agents/research.md
+    commands:
+      - commands/fresh-eyes.md
+      - commands/cve-diff.md
+    skills:
+      - skills/pr-review/SKILL.md
+      - skills/stale-pr-triage/SKILL.md
+      - skills/insecure-defaults/SKILL.md
+    scripts:
+      - scripts/pr-review-preflight.py
+      - scripts/post-pr-review.py
+      - scripts/pr-review-buckets.json
+  codex:
+    supported: false
+  opencode:
+    supported: false
+
+rules:
+  - ../../rules/pr-disclaimers.md
+  - ../../rules/pr-review-principles.md
+  - ../../rules/scratchpad.md
+  - ../../rules/local-repos.md
+  - ../../rules/search.md
+  - ../../rules/jira.md
+
+references:
+  - https://conventionalcomments.org
+
+maintainer: anycat_blank

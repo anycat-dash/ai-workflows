@@ -1,0 +1,26 @@
+{
+  "buckets": {
+    "code": {
+      "extensions": [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".py", ".go", ".java", ".rb", ".rs", ".c", ".cpp", ".h", ".cs", ".swift", ".kt", ".scala", ".php", ".ex", ".exs"],
+      "patterns": ["src/", "lib/", "app/", "cmd/", "pkg/", "internal/", "server/", "client/", "api/", "handler/", "service/", "controller/", "model/", "util/", "utils/", "core/"]
+    },
+    "tests": {
+      "extensions": [".test.ts", ".spec.ts", ".test.tsx", ".spec.tsx", ".test.js", ".spec.js", "_test.go", ".test.py", "_spec.rb"],
+      "patterns": ["test/", "tests/", "__tests__/", "spec/", "e2e/", "integration/"]
+    },
+    "config": {
+      "extensions": [".yaml", ".yml", ".toml", ".env", ".ini", ".cfg", ".conf", ".xml", ".hcl"],
+      "patterns": ["config/", ".github/", "Dockerfile", "docker-compose", "Makefile", "helm/", "k8s/", "terraform/", "infra/", ".circleci/", ".buildkite/"]
+    },
+    "docs": {
+      "extensions": [".md", ".mdx", ".rst", ".txt", ".adoc"],
+      "patterns": ["docs/", "README", "CHANGELOG", "CONTRIBUTING", "LICENSE"]
+    }
+  },
+  "lensRules": {
+    "code":   ["security", "correctness", "quality", "testing"],
+    "tests":  ["testing"],
+    "config": ["security"],
+    "docs":   []
+  }
+}

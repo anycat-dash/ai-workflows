@@ -1,0 +1,18 @@
+# Place this file at:
+#   ~/.config/opencode/agents/plugin-name.md  (global)
+#   .opencode/agents/plugin-name.md           (project-local)
+#
+# The YAML frontmatter is parsed by OpenCode; the markdown body is the system prompt.
+---
+name: plugin-name
+description: One-line description used by the coordinator to decide when to spawn this agent.
+model: anthropic/claude-haiku-4-5
+tools:
+  - read
+  - grep
+  # available: read, write, edit, bash, grep, glob, fetch
+---
+
+You are a specialized agent focused on <task>.
+
+Keep responses concise and structured. Do not perform work outside your defined scope — return results to the coordinator instead.

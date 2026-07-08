@@ -1,0 +1,24 @@
+name: plugin-name
+slug: plugin-name
+version: 0.1.0
+description: One-line description of what this plugin does.
+category: code-quality  # one of: code-quality, testing, documentation, debugging, refactoring, context-management, devops, search-navigation, pr-review
+tags: []
+
+compatibility:
+  claude-code:
+    type: mcp  # mcp | hook | skill | subagent
+    supported: true
+    config: config/claude.json
+  codex:
+    supported: false
+    config: config/codex.json
+  opencode:
+    supported: false
+    config: config/opencode.yaml
+
+# Links to external tools, repos, or docs this plugin wraps
+references: []
+
+# Who maintains this entry
+maintainer: ""

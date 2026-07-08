@@ -1,0 +1,12 @@
+{
+  "name": "plugin-name",
+  "description": "One-line description so Claude knows when to delegate to this subagent.",
+  "model": "claude-haiku-4-5-20251001",
+  "systemPrompt": "You are a specialized agent focused on <task>. Only use the tools listed below. Return concise, structured output to the coordinator.",
+  "tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Bash"
+  ]
+}

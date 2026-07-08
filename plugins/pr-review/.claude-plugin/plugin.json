@@ -1,0 +1,18 @@
+{
+  "name": "code-review",
+  "displayName": "Code Review",
+  "version": "0.1.0",
+  "description": "PR and security review workflows",
+  "author": {
+    "name": "anycat_blank"
+  },
+  "homepage": "https://github.com/anycat-dash/ai-workflows",
+  "repository": "https://github.com/anycat-dash/ai-workflows",
+  "license": "MIT",
+  "keywords": [
+    "code-review",
+    "pr-review",
+    "security",
+    "review"
+  ]
+}

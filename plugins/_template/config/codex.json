@@ -1,0 +1,27 @@
+{
+  "agent": {
+    "name": "plugin-name",
+    "description": "One-line description used for routing by the coordinator agent.",
+    "model": "o4-mini",
+    "instructions": "You are a specialized agent focused on <task>. Return structured output so the coordinator can consolidate results.",
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "example_tool",
+          "description": "Describe what this tool does.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "input": {
+                "type": "string",
+                "description": "The input to process."
+              }
+            },
+            "required": ["input"]
+          }
+        }
+      }
+    ]
+  }
+}
