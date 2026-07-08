@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-workflows"
+version = "0.1.0"
+description = "Coding agent plugins for Claude Code, Codex, and OpenCode"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+pr-review          = []
+code-quality       = []
+testing            = []
+documentation      = []
+debugging          = []
+refactoring        = []
+context-management = []
+devops             = []
+search-navigation  = []
+all = [
+  "ai-workflows[pr-review]",
+  "ai-workflows[code-quality]",
+  "ai-workflows[testing]",
+  "ai-workflows[documentation]",
+  "ai-workflows[debugging]",
+  "ai-workflows[refactoring]",
+  "ai-workflows[context-management]",
+  "ai-workflows[devops]",
+  "ai-workflows[search-navigation]",
+]
+
+[project.scripts]
+ai-workflows = "ai_workflows.cli:main"
+
+# Bundle plugins/ and rules/ from the repo root into the installed package
+[tool.hatch.build.targets.wheel.sources]
+"plugins" = "ai_workflows/plugins"
+"rules"   = "ai_workflows/rules"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ai_workflows"]
