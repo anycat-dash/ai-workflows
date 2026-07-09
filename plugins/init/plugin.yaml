@@ -1,0 +1,56 @@
+name: init
+slug: init
+version: 0.1.0
+description: Bootstrap a Claude environment by installing a curated set of plugins and skills. Idempotent — safe to re-run.
+category: init
+type: bundle
+tags:
+  - bootstrap
+  - setup
+  - meta
+
+# Skills installed from GitHub. Each entry maps to a repo and the skill paths within it.
+# sourceType: github  → fetches raw files from github.com/<source>
+skills:
+  - name: caveman
+    source: JuliusBrussee/caveman
+    sourceType: github
+    paths:
+      - skills/caveman/SKILL.md
+      - skills/cavecrew/SKILL.md
+      - skills/caveman-commit/SKILL.md
+      - skills/caveman-compress/SKILL.md
+      - skills/caveman-help/SKILL.md
+      - skills/caveman-review/SKILL.md
+      - skills/caveman-stats/SKILL.md
+
+  - name: headroomai
+    source: headroomai/headroomai   # TODO: verify repo slug
+    sourceType: github
+    paths:
+      - skills/headroomai/SKILL.md
+
+  - name: openspec
+    source: openspec/openspec       # TODO: verify repo slug
+    sourceType: github
+    paths:
+      - skills/openspec/SKILL.md
+
+  - name: openwiki
+    source: openwiki/openwiki       # TODO: verify repo slug
+    sourceType: github
+    paths:
+      - skills/openwiki/SKILL.md
+
+compatibility:
+  claude-code:
+    type: bundle
+    supported: true
+    scripts:
+      - scripts/init.py
+  codex:
+    supported: false
+  opencode:
+    supported: false
+
+maintainer: anycat_blank

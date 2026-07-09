@@ -7,7 +7,7 @@ name = "ai-workflows"
 version = "0.1.0"
 description = "Coding agent plugins for Claude Code, Codex, and OpenCode"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["pyyaml>=6.0"]
 
 [project.optional-dependencies]
 pr-review          = []

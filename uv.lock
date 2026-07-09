@@ -1,0 +1,22 @@
+version = 1
+revision = 2
+requires-python = ">=3.11"
+
+[[package]]
+name = "ai-workflows"
+version = "0.1.0"
+source = { editable = "." }
+
+[package.metadata]
+requires-dist = [
+    { name = "ai-workflows", extras = ["code-quality"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["context-management"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["debugging"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["devops"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["documentation"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["pr-review"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["refactoring"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["search-navigation"], marker = "extra == 'all'" },
+    { name = "ai-workflows", extras = ["testing"], marker = "extra == 'all'" },
+]
+provides-extras = ["pr-review", "code-quality", "testing", "documentation", "debugging", "refactoring", "context-management", "devops", "search-navigation", "all"]
