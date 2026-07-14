@@ -10,10 +10,7 @@ Reads the skill bundle declared in `plugin.yaml` and installs any skills not yet
 
 | Skill | Source | Description |
 |-------|--------|-------------|
-| caveman + crew | `JuliusBrussee/caveman` | Ultra-compressed token-efficient communication mode |
-| headroomai | `headroomai/headroomai` | _(TODO: verify repo slug)_ |
-| openspec | `openspec/openspec` | _(TODO: verify repo slug)_ |
-| openwiki | `openwiki/openwiki` | _(TODO: verify repo slug)_ |
+| _(none yet)_ | | |
 
 ## Usage
 

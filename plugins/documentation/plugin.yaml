@@ -1,0 +1,38 @@
+name: documentation
+slug: documentation
+version: 0.1.0
+description: Install skills that help agents read, write, and navigate documentation.
+category: documentation
+type: bundle
+tags:
+  - documentation
+  - specs
+  - wiki
+
+# Skills installed from GitHub. Each entry maps to a repo and the skill paths within it.
+# sourceType: github  → fetches raw files from github.com/<source>
+skills:
+  - name: openspec
+    source: openspec/openspec       # TODO: verify repo slug
+    sourceType: github
+    paths:
+      - skills/openspec/SKILL.md
+
+  - name: openwiki
+    source: openwiki/openwiki       # TODO: verify repo slug
+    sourceType: github
+    paths:
+      - skills/openwiki/SKILL.md
+
+compatibility:
+  claude-code:
+    type: bundle
+    supported: true
+    scripts:
+      - scripts/install.py
+  codex:
+    supported: false
+  opencode:
+    supported: false
+
+maintainer: anycat_blank
