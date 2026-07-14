@@ -9,14 +9,16 @@ user → /orchestrate <task-description>
   0. Precheck                    — verify $PWD/openspec exists (else halt)
   1. Architect      (Opus 4.7)   — openspec proposal + design + tasks.md
   2. [HUMAN GATE]                — approve spec
-  3. Implementer    (Sonnet 4.6) — code + PR (no architect memory)
-  4. Code Review    (reviewer)   — assess-only, no posting
+  3. Implementer    (Sonnet 4.6) — code + PR(s) (may stack, no architect memory)
+  4. Code Review    (reviewer)   — assess-only per PR, no posting
      └─ loop 3 ↔ 4 up to 3 iterations
-  5. Quality        (Sonnet 4.6) — run tests, add missing coverage
-  6. [HUMAN GATE]                — approve before merge
-  7. Last Mile      (Sonnet 4.6) — wait for CI, merge PR
-  8. Cleanup                     — if merged, remove scratchpad
+  5. Quality        (Sonnet 4.6) — run tests per PR, add missing coverage
+  6. Merge handoff               — announce stack (no gate here)
+  7. Last Mile      (Sonnet 4.6) — [HUMAN GATE per PR] archive spec, wait CI, merge
+  8. Cleanup                     — if all merged, remove scratchpad
 ```
+
+Approval gates: **1 for spec** + **N for merges** (one per PR in the stack). No hidden auto-merges.
 
 ## Agents
 

@@ -208,12 +208,12 @@ Return a JSON block:
 
 If all PRs pass, write a stack summary to `quality/summary.md` listing each PR's report path + tests-added count. Set `state.json.phase = "awaiting_merge_approval"`.
 
-## Phase 6: HUMAN GATE — approve merge
+## Phase 6: Merge handoff (announcement, no gate)
 
 Print exactly:
 
 ```
-APPROVAL REQUIRED — ready to merge
+Handing off to last-mile. You will be prompted PER PR before each merge.
 
 Stack (merge order, bottom-up):
   1. #<pr_number> <title> — <tests_added> tests added
@@ -221,19 +221,13 @@ Stack (merge order, bottom-up):
   ...
 
 Quality summary: <path to quality/summary.md>
-
-Reply `approve` to run last-mile (archive spec + merge stack bottom-up), or `abort` to stop.
 ```
 
-Then STOP.
-
-**On next user turn:**
-- `approve` → Phase 7.
-- `abort` → set `state.json.phase = "aborted"`, STOP. Do NOT clean up scratchpad.
+Immediately continue to Phase 7 in the same turn. No stop, no user reply expected here — last-mile handles per-PR approval.
 
 ## Phase 7: Last Mile (iterate the stack bottom-up)
 
-Spawn a **single** `last-mile` subagent with the full ordered stack. Prompt template:
+Spawn the `last-mile` subagent with `gated: true` so it stops before EACH merge for individual PR approval. Prompt template:
 
 ```
 Repo: <derived from first PR url>
@@ -244,6 +238,12 @@ Spec paths (for openspec archive — archive ONCE, on the TOP PR of the stack):
   - proposal: <spec-refs.json proposal>
   - design: <spec-refs.json design>
   - tasks: <spec-refs.json tasks>
+
+gated: true    # stop before each merge for per-PR human approval
+
+<IF resuming after an approval:>
+resume_from: <pr_number>
+already_merged: [{"pr_number": <n>, "merge_sha": "<sha>"}, ...]
 
 Steps:
 1. For each PR from bottom to top:
@@ -267,7 +267,28 @@ Return a JSON block:
 }
 ```
 
-If `all_merged == true` → Phase 8. Otherwise print the failure reason + which PR failed, set `state.json.phase = "merge_failed"`, STOP. PRs already merged stay merged — do not roll back.
+**Handle the return status:**
+
+- `status == "all_merged"` → Phase 8.
+- `status == "awaiting_merge_approval"` → last-mile stopped before a PR merge. Print the approval prompt for the user, save `merges_so_far` into `state.json.merged_prs`, set `state.json.phase = "awaiting_pr_merge_approval"`, set `state.json.next_pr_number = <n>`, then STOP.
+
+  Approval prompt template:
+  ```
+  APPROVAL REQUIRED — merge PR #<next_pr_number>
+
+  PR:     <next_pr_url>
+  Status: all checks green
+  Stack:  <position> of <stack_size>
+  Merged so far: <count>
+
+  Reply `approve` to merge this PR, or `abort` to stop the stack (already-merged PRs stay merged).
+  ```
+
+  **On next user turn:**
+  - `approve` → re-spawn last-mile with `gated: true`, `resume_from: <state.json.next_pr_number>`, `already_merged: <state.json.merged_prs>`. Loop back to reading its return value.
+  - `abort` → set `state.json.phase = "aborted_mid_stack"`, STOP. Do NOT clean up scratchpad. Already-merged PRs remain merged.
+
+- `status == "failed"` → print failure reason + `failed_at`, set `state.json.phase = "merge_failed"`, STOP. PRs already merged stay merged — do not roll back.
 
 ## Phase 8: Cleanup
 
