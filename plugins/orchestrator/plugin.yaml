@@ -1,0 +1,39 @@
+name: orchestrator
+slug: orchestrator
+version: 0.1.0
+description: Multi-agent orchestration for end-to-end feature delivery — architect → implement → review → QA → merge, with human approval gates.
+category: devops
+tags:
+  - orchestration
+  - multi-agent
+  - workflow
+  - openspec
+
+compatibility:
+  claude-code:
+    type: subagent
+    supported: true
+    agents:
+      - agents/architect.md
+      - agents/implementer.md
+      - agents/quality.md
+      - agents/last-mile.md
+    commands:
+      - commands/orchestrate.md
+    skills:
+      - skills/orchestrate/SKILL.md
+    scripts:
+      - scripts/orchestrator-init.py
+  codex:
+    supported: false
+  opencode:
+    supported: false
+
+rules:
+  - ../../rules/pr-disclaimers.md
+  - ../../rules/scratchpad.md
+
+references:
+  - https://github.com/openspec/openspec
+
+maintainer: anycat_blank
