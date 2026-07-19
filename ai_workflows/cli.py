@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from .installer import get_available_plugins, install_plugin
+from .installer import get_available_plugins, install_plugin, uninstall_plugin
 
 
 def cmd_install(args: argparse.Namespace) -> int:
@@ -32,6 +32,29 @@ def cmd_install(args: argparse.Namespace) -> int:
 
     if not args.dry_run:
         print("\nDone. Restart Claude Code to pick up new agents and commands.")
+    return 0
+
+
+def cmd_uninstall(args: argparse.Namespace) -> int:
+    slugs: list[str] = args.plugin
+    if "all" in slugs:
+        slugs = get_available_plugins()
+        if not slugs:
+            print("No plugins available.", file=sys.stderr)
+            return 1
+
+    last = len(slugs) - 1
+    for i, slug in enumerate(slugs):
+        dry = " (dry run)" if args.dry_run else ""
+        print(f"\nUninstalling '{slug}'{dry}:")
+        try:
+            lines = uninstall_plugin(
+                slug, dry_run=args.dry_run, remove_rules=args.rules and i == last
+            )
+        except FileNotFoundError as e:
+            print(f"  error: {e}", file=sys.stderr)
+            return 1
+        print("\n".join(lines) if lines else "  nothing to remove.")
     return 0
 
 
@@ -67,6 +90,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show what would be installed without writing any files",
     )
     install.set_defaults(func=cmd_install)
+
+    uninstall = sub.add_parser("uninstall", help="Remove installed plugin files from ~/.claude/")
+    uninstall.add_argument("plugin", nargs="+", metavar="<plugin|all>")
+    uninstall.add_argument("--dry-run", action="store_true")
+    uninstall.add_argument("--rules", action="store_true", help="Also remove shared rules")
+    uninstall.set_defaults(func=cmd_uninstall)
 
     list_cmd = sub.add_parser("list", help="List available plugins")
     list_cmd.set_defaults(func=cmd_list)

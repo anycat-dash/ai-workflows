@@ -82,6 +82,56 @@ def _install_rules(data_root: Path, dry_run: bool) -> list[str]:
     return installed
 
 
+def _remove_file(path: Path, dry_run: bool) -> bool:
+    if not path.exists():
+        return False
+    if not dry_run:
+        path.unlink()
+    return True
+
+
+def uninstall_plugin(slug: str, *, dry_run: bool = False, remove_rules: bool = False) -> list[str]:
+    """Remove files this plugin installed. Returns status lines."""
+    data_root = _data_root()
+    plugin_dir = data_root / "plugins" / slug
+    if not plugin_dir.exists():
+        available = get_available_plugins()
+        raise FileNotFoundError(
+            f"Plugin '{slug}' not found. Available: {', '.join(available) or 'none'}"
+        )
+
+    lines: list[str] = []
+    for subdir, dest_dir in INSTALL_MAP.items():
+        src_dir = plugin_dir / subdir
+        if not src_dir.exists():
+            continue
+        for src in sorted(src_dir.glob("*.md")):
+            dest = dest_dir / src.name
+            if _remove_file(dest, dry_run):
+                lines.append(f"  removed {subdir[:-1]:<7} ← {dest}")
+
+    scripts_src = plugin_dir / "scripts"
+    if scripts_src.exists():
+        for src in sorted(scripts_src.iterdir()):
+            if src.suffix not in (".py", ".sh") or not src.is_file():
+                continue
+            dest = SCRIPTS_DIR / src.name
+            if _remove_file(dest, dry_run):
+                lines.append(f"  removed script  ← {dest}")
+
+    if remove_rules:
+        rules_src = data_root / "rules"
+        if rules_src.exists():
+            for src in sorted(rules_src.glob("*.md")):
+                if src.stem == "README":
+                    continue
+                dest = RULES_DIR / src.name
+                if _remove_file(dest, dry_run):
+                    lines.append(f"  removed rule    ← {dest}")
+
+    return lines
+
+
 def install_plugin(slug: str, *, dry_run: bool = False, install_rules: bool = True) -> list[str]:
     """
     Install a plugin by slug. Returns a list of human-readable status lines.
