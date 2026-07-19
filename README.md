@@ -16,8 +16,6 @@ The repo is both:
 | [`documentation`](./plugins/documentation/) | Spec + docs skills — openspec, openwiki. |
 | [`init`](./plugins/init/) | Bootstrap installer bundle (idempotent skill fetch from GitHub). |
 
-Stubs (README only, no bundled content yet): `debugging`, `devops`, `refactoring`, `search-navigation`, `testing`.
-
 See [`plugins/README.md`](./plugins/README.md) for the full category index.
 
 ## Install

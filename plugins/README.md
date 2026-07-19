@@ -14,14 +14,10 @@ A curated collection of plugins, tools, and configurations to drive efficiency i
 
 | Category | Description |
 |----------|-------------|
-| [code-quality](./code-quality/) | Linting, formatting, static analysis |
-| [testing](./testing/) | Test generation, coverage, runners |
 | [documentation](./documentation/) | Docstring gen, README, changelogs |
-| [debugging](./debugging/) | Stack trace analysis, log parsing, breakpoints |
-| [refactoring](./refactoring/) | Rename, extract, restructure |
 | [context-management](./context-management/) | Memory, summarization, project indexing |
-| [devops](./devops/) | CI/CD, deployment, infra queries |
-| [search-navigation](./search-navigation/) | Code search, symbol lookup, file navigation |
+| [init](./init/) | Bootstrap installer bundle |
+| [orchestrator](./orchestrator/) | End-to-end multi-agent PR delivery |
 | [pr-review](./pr-review/) | PR review automation, diff analysis, comment generation — 7 subagents, 2 commands, 3 skills |
 
 ## Adding a Plugin

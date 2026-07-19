@@ -11,24 +11,16 @@ dependencies = ["pyyaml>=6.0"]
 
 [project.optional-dependencies]
 pr-review          = []
-code-quality       = []
-testing            = []
 documentation      = []
-debugging          = []
-refactoring        = []
 context-management = []
-devops             = []
-search-navigation  = []
+init               = []
+orchestrator       = []
 all = [
   "ai-workflows[pr-review]",
-  "ai-workflows[code-quality]",
-  "ai-workflows[testing]",
   "ai-workflows[documentation]",
-  "ai-workflows[debugging]",
-  "ai-workflows[refactoring]",
   "ai-workflows[context-management]",
-  "ai-workflows[devops]",
-  "ai-workflows[search-navigation]",
+  "ai-workflows[init]",
+  "ai-workflows[orchestrator]",
 ]
 
 [project.scripts]
