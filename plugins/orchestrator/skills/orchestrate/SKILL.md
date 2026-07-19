@@ -113,8 +113,14 @@ Spec artifacts:
   - tasks: <path>
 
 <IF iteration > 0:>
-Prior review findings to address: <path to iterations/i-N/aggregated-findings.json>
+Prior findings to address:
+  - Review findings (from Phase 4, if present): <path to iterations/i-N/aggregated-findings.json>
+  - QA ambiguous failures (from Phase 5, if present): <path to iterations/i-N/qa-findings.json>
 Existing PRs (from prs.json): <inline the array>
+
+For QA ambiguous failures: each entry names a failing test and a diagnosis of why
+the failure is ambiguous. Decide per PR intent whether to fix the test or the
+production code, apply the fix, and push to the PR's worktree/branch.
 
 You are a senior software engineer. Read the spec artifacts, then implement
 tasks.md. Apply your judgment on whether to ship as one PR or a stack — see
@@ -191,22 +197,41 @@ PR: <pr.pr_url>, number: <pr.pr_number>, branch: <pr.branch>
 Worktree: <pr.worktree>
 Scratchpad: ~/scratchpad/orchestrator/<task-slug>/
 Report path: ~/scratchpad/orchestrator/<task-slug>/quality/report-pr<pr_number>.md
+QA iteration: <qa_iteration>
 
 You are a senior QA engineer. `cd` into the worktree. Run the existing unit-test
-suite for the changes in THIS PR only. Identify coverage gaps in this PR's diff.
-Add tests you believe are necessary. Ensure the build and full test suite pass.
-Push any added tests to the PR branch.
+suite for the changes in THIS PR only. Then:
 
-Do NOT modify production code (only tests). If a production bug blocks tests,
-report it and stop — do not attempt to fix.
+- Fix failing tests per your agent definition:
+  - Stale assertion → update the test
+  - Flaky fixture/mock → stabilize
+  - Genuine production bug proven by the test → minimum-change prod fix
+  - Ambiguous (unclear whether test or prod reflects PR intent) → halt with diagnosis
+- Close coverage gaps in this PR's diff (new functions, uncovered branches, error paths).
+- Ensure build + full test suite pass. Push all commits.
 
-Return a JSON block:
-{"tests_passed": <bool>, "tests_added": <int>, "coverage_notes": "<...>", "report_path": "<path>"}
+Return JSON:
+{"tests_passed": <bool>, "tests_added": <int>, "tests_fixed": <int>, "prod_fixes": <int>,
+ "coverage_notes": "<...>", "report_path": "<path>", "ambiguous_failures": [<optional list of {test, diagnosis}>]}
 ```
 
-**Halt on first failure:** if any PR's `tests_passed == false`, stop the loop and surface the failure to the user with the report path. Do not proceed to the merge gate.
+Save each PR's output to `iterations/i-<N>/qa-pr<pr_number>.json` where `<N>` = current `state.json.iteration`.
 
-If all PRs pass, write a stack summary to `quality/summary.md` listing each PR's report path + tests-added count. Set `state.json.phase = "awaiting_merge_approval"`.
+**Decision** (after all PRs run):
+
+- If every PR returns `tests_passed: true` → write stack summary to `quality/summary.md` (per-PR report path, `tests_added`, `tests_fixed`, `prod_fixes`). Set `state.json.phase = "awaiting_merge_approval"`. Advance to Phase 6.
+- Else if `qa_iteration >= 2` (loop cap) → print ambiguous diagnoses per PR + report paths. Set `state.json.phase = "qa_loop_capped"` and STOP.
+- Else → aggregate the ambiguous failures across PRs into `iterations/i-<N>/qa-findings.json`:
+  ```json
+  {
+    "per_pr": [
+      {"pr_number": <n>, "ambiguous_failures": [{"test": "<...>", "diagnosis": "<...>"}], "report_path": "<...>"}
+    ]
+  }
+  ```
+  Loop back to Phase 3 (implementer) with `qa_iteration + 1`, passing the qa-findings path as the finding source. Implementer resolves each ambiguous failure (choose test-side or prod-side fix per PR intent), pushes, then Phase 4 (review) re-runs, then Phase 5 (quality) re-runs.
+
+The `qa_iteration` counter is separate from Phase 4's `iteration` — track it in `state.json.qa_iteration` (init 0 on first Phase 5 entry).
 
 ## Phase 6: Merge handoff (announcement, no gate)
 
