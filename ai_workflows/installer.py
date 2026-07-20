@@ -169,13 +169,10 @@ def _run_post_uninstall(plugin_dir: Path, dry_run: bool) -> list[str]:
             continue
 
         lines.append(f"  running postUninstall: {desc}")
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-        for out in (result.stdout, result.stderr):
-            for ln in out.splitlines():
-                if ln.strip():
-                    lines.append(f"    {ln}")
-        if result.returncode != 0:
-            lines.append(f"  postUninstall failed (exit {result.returncode}): {desc}")
+        print(lines[-1], flush=True)
+        rc = _stream_shell(cmd, prefix="    ")
+        if rc != 0:
+            lines.append(f"  postUninstall failed (exit {rc}): {desc}")
     return lines
 
 
@@ -320,14 +317,24 @@ def _run_post_install(plugin_dir: Path, dry_run: bool) -> list[str]:
             continue
 
         lines.append(f"  running postInstall: {desc}")
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-        for out in (result.stdout, result.stderr):
-            for ln in out.splitlines():
-                if ln.strip():
-                    lines.append(f"    {ln}")
-        if result.returncode != 0:
-            lines.append(f"  postInstall failed (exit {result.returncode}): {desc}")
+        print(lines[-1], flush=True)
+        rc = _stream_shell(cmd, prefix="    ")
+        if rc != 0:
+            lines.append(f"  postInstall failed (exit {rc}): {desc}")
     return lines
+
+
+def _stream_shell(cmd: str, *, prefix: str = "") -> int:
+    """Run a shell command, streaming stdout/stderr live to the terminal. Returns exit code."""
+    proc = subprocess.Popen(
+        cmd, shell=True,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        text=True, bufsize=1,
+    )
+    assert proc.stdout is not None
+    for line in proc.stdout:
+        print(f"{prefix}{line.rstrip()}", flush=True)
+    return proc.wait()
 
 
 def install_plugin(slug: str, *, dry_run: bool = False, install_rules: bool = True) -> list[str]:

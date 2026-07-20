@@ -27,7 +27,7 @@ skills:
 postInstall:
   - description: "Install headroom CLI (headroomlabs-ai/headroom)"
     check: "command -v headroom"
-    command: "uv tool install --python 3.13 'headroom-ai[all]'"
+    command: "uv tool install --verbose --python 3.13 'headroom-ai[all]'"
 
 postUninstall:
   - description: "Remove headroom CLI"
