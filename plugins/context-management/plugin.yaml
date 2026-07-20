@@ -24,11 +24,15 @@ skills:
       - skills/caveman-review/SKILL.md
       - skills/caveman-stats/SKILL.md
 
-  - name: headroomai
-    source: headroomai/headroomai   # TODO: verify repo slug
-    sourceType: github
-    paths:
-      - skills/headroomai/SKILL.md
+postInstall:
+  - description: "Install headroom CLI (headroomlabs-ai/headroom)"
+    check: "command -v headroom"
+    command: "uv tool install --python 3.13 'headroom-ai[all]'"
+
+postUninstall:
+  - description: "Remove headroom CLI"
+    check: "command -v headroom"
+    command: "uv tool uninstall headroom-ai"
 
 compatibility:
   claude-code:

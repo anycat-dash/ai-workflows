@@ -120,6 +120,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Bootstrap Claude environment from init plugin.")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be installed without writing files")
     parser.add_argument("--repo-root", type=Path, help="Override repo root (default: auto-detected)")
+    parser.add_argument("--skills-dir", type=Path, help="Override skills destination directory")
+    parser.add_argument("--lock-file", type=Path, help="Override skills-lock.json path")
     args = parser.parse_args()
 
     global REPO_ROOT, SKILLS_DIR, LOCK_FILE
@@ -127,6 +129,10 @@ def main() -> None:
         REPO_ROOT  = args.repo_root.resolve()
         SKILLS_DIR = REPO_ROOT / ".agents" / "skills"
         LOCK_FILE  = REPO_ROOT / "skills-lock.json"
+    if args.skills_dir:
+        SKILLS_DIR = args.skills_dir.resolve()
+    if args.lock_file:
+        LOCK_FILE  = args.lock_file.resolve()
 
     config = load_plugin_yaml()
     skills_to_install: list[dict] = config.get("skills", [])
